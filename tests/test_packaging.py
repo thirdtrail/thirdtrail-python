@@ -21,7 +21,7 @@ def test_version_matches_pyproject():
     If they disagree, `pip install thirdtrail==0.1.1` fails for a version the
     git history says exists.
     """
-    declared = re.search(r'^version = "([^"]+)"', PYPROJECT, re.M).group(1)
+    declared = re.search(r'^version = "([^"]+)"', PYPROJECT, re.MULTILINE).group(1)
     assert thirdtrail.__version__ == declared, (
         f"__init__ says {thirdtrail.__version__}, pyproject says {declared}"
     )
