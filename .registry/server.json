@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.thirdtrail/thirdtrail",
+  "description": "Elevation-corrected sun, moon, twilight, solar and tide data for any point on Earth",
+  "version": "1.0.0",
+  "websiteUrl": "https://thirdtrail.life/docs/mcp/",
+  "repository": {
+    "url": "https://github.com/thirdtrail/thirdtrail-python",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://thirdtrail.life/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Your thirdtrail API key as 'Bearer tt_live_\u2026'. Mint one at https://thirdtrail.life/apis/keys/. The MCP server requires a paid plan; the REST API has a free tier.",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
