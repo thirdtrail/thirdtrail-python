@@ -1,0 +1,45 @@
+name: Release
+
+# Publishes to PyPI on a version tag, via Trusted Publishing.
+#
+# No API token exists anywhere — not in the repo, not in Actions secrets, not
+# on anyone's laptop. GitHub mints a short-lived OIDC token for this specific
+# workflow in this specific repository, and PyPI accepts it because the
+# project is configured to trust exactly that combination. A token is a thing
+# that can leak; this is a thing that cannot.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build
+      - run: python -m build
+      # Refuse to publish something the tests do not cover.
+      - run: pip install -e ".[dev]" && python -m pytest -q
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write        # required for Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

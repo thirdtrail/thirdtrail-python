@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "thirdtrail"
+version = "0.1.0"
+description = "Elevation-corrected sun, moon, solar irradiance and tide data for any point on Earth."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [{ name = "Third Trail Limited" }]
+keywords = [
+    "sunrise", "sunset", "ephemeris", "ephemerides", "twilight",
+    "golden-hour", "solar", "irradiance", "tides", "astronomy",
+    "elevation", "prayer-times", "api-client",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = ["requests>=2.25"]
+
+[project.urls]
+Homepage = "https://thirdtrail.life"
+Documentation = "https://thirdtrail.life/docs/"
+"API Reference" = "https://thirdtrail.life/openapi.json"
+Source = "https://github.com/thirdtrail/thirdtrail-python"
+Issues = "https://github.com/thirdtrail/thirdtrail-python/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "responses>=0.23", "mypy>=1.5", "ruff>=0.5"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/thirdtrail"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
