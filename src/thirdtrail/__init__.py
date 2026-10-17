@@ -10,7 +10,7 @@ Keys are minted at https://thirdtrail.life/apis/keys/.
 """
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .client import Client
 from .errors import (

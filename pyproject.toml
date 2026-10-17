@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "thirdtrail"
-version = "0.1.0"
+version = "0.1.1"
 description = "Elevation-corrected sun, moon, solar irradiance and tide data for any point on Earth."
 readme = "README.md"
 requires-python = ">=3.9"

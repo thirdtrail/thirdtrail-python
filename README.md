@@ -1,8 +1,8 @@
 # thirdtrail
 
-Python client for the [thirdtrail](https://thirdtrail.life) APIs — sun, moon,
-twilight, solar irradiance and tides for any point on Earth, **with elevation
-as a first-class input**.
+Python client for the [thirdtrail](https://thirdtrail.life) APIs: sun, moon,
+twilight, solar irradiance and tides for any point on Earth. Sun and moon
+times are corrected for the elevation you pass in.
 
 ```bash
 pip install thirdtrail
@@ -20,10 +20,10 @@ for day in tt.ephemerides(lat=53.3498, lon=-6.2603, elevation=20):
 ## Why elevation
 
 Most sunrise APIs answer for an observer standing at sea level. The higher you
-are, the further you see, and the earlier the sun clears the horizon.
+are, the further you can see, and the earlier the sun clears the horizon.
 
-At the Cliffs of Moher (214 m) the difference is about **three minutes** — on
-sunrise, sunset, and every golden- and blue-hour boundary with them:
+At the Cliffs of Moher (214 m) the difference is about **three minutes**, and
+it moves sunrise, sunset and every golden- and blue-hour boundary with them:
 
 | | sea level | at 214 m |
 |---|---|---|
@@ -31,8 +31,8 @@ sunrise, sunset, and every golden- and blue-hour boundary with them:
 | golden hour, morning start | 06:56:51 | **06:53:42** |
 | moonrise | 18:03:48 | **17:59:40** |
 
-Golden hour lasts 20–40 minutes, so three minutes is a real slice of it. Pass
-`elevation` whenever you know it.
+Golden hour lasts 20 to 40 minutes, so three minutes is a noticeable share of
+it. Pass `elevation` whenever you know it.
 
 ## What you get
 
@@ -44,8 +44,8 @@ day.moon.phase.illumination         # 0.7376
 ```
 
 Timestamps arrive as aware `datetime` objects, not strings. Anything the
-client does not model is still there on `day.raw` and `day.response`, so a new
-server-side field never has to wait for a client release.
+client does not model is still available on `day.raw` and `day.response`, so
+you can use a new server-side field before the client catches up.
 
 ## Endpoints
 
@@ -61,11 +61,11 @@ tt.tide_window(lat=…, lon=…, elevation=…)             # tides + sun + moon
 tt.tide_constituents(lat=…, lon=…)                    # harmonic constants
 ```
 
-### Tides take no elevation — except one
+### Tides take no elevation, with one exception
 
-`tide_heights` and `tide_extremes` have no `elevation` parameter, and that is
-deliberate: how high *you* stand does not change the ocean surface. Passing it
-raises `TypeError` rather than being silently ignored.
+`tide_heights` and `tide_extremes` have no `elevation` parameter on purpose,
+because how high *you* stand doesn't change the ocean surface. If you pass
+one, you get a `TypeError` instead of having it silently ignored.
 
 `tide_window` is the exception, because half of what it returns is sun and
 moon data:
@@ -78,11 +78,12 @@ for day in tt.tide_window(lat=52.9715, lon=-9.4309, elevation=214, days=3):
 ```
 
 Tide heights are metres relative to **mean sea level, not chart datum**, and
-exclude weather-driven surge. Not for navigation.
+they exclude weather-driven surge. Not for navigation.
 
 ## Errors
 
-Catch a type, not a sentence:
+Each kind of failure has its own exception class, so you can catch the one you
+care about instead of parsing error messages:
 
 ```python
 from thirdtrail import PlanLimitExceeded
@@ -97,22 +98,22 @@ except PlanLimitExceeded as e:
 `PlanLimitExceeded` and `InvalidRequest` (400), `RateLimited` (429),
 `DataUnavailable` (503), `ServerError` (5xx). All subclass `ThirdtrailError`.
 
-Transient failures and 429s are retried with backoff. A plan ceiling is not —
-it will fail identically every time.
+Transient failures and 429s are retried with backoff. Plan limits are not
+retried, because the same request would fail the same way every time.
 
 ## Keys
 
-Mint one at [thirdtrail.life/apis/keys/](https://thirdtrail.life/apis/keys/).
+Create one at [thirdtrail.life/apis/keys/](https://thirdtrail.life/apis/keys/).
 A key belongs to one subscription, so it works with one API; a Tides key
 calling a solar endpoint gets `PermissionDenied`.
 
-There is a free tier on every API.
+Every API has a free tier.
 
 ## Not covered yet
 
-Bulk (`POST`) endpoints, iCalendar feeds and webhook management. Use the REST
-API directly for those — the full contract is published as
-[OpenAPI 3.1](https://thirdtrail.life/openapi.json).
+The client doesn't cover the bulk (`POST`) endpoints, iCalendar feeds or
+webhook management yet. For those, call the REST API directly; the full
+contract is published as [OpenAPI 3.1](https://thirdtrail.life/openapi.json).
 
 Using an AI agent? There is an [MCP server](https://thirdtrail.life/docs/mcp/)
 that exposes the same data as tools.
